@@ -19,7 +19,8 @@ Deployment using Argo CD
 helm template --name cronjob --namespace=crons ./helm-cronjobs --namespace=crons -f ./helm-cronjobs/values.yaml --output-dir cronjob
 argocd app create cronjob-argo --repo https://github.com/pnduati/helm-cronjobs.git --path cron --dest-server https://kubernetes.default.svc --dest-namespace crons
 argocd app sync cronjob-argo
-![Argo*CD*Applications](Argo*CD*-_Applications___cronjob-argo.png)
+![Argo*CD*Applications](images/Argo_CD_-_Applications___cronjob-argo.png)
+
 ```
 
 ## Examples
