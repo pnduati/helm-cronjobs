@@ -1,0 +1,125 @@
+---
+# Source: helm-cronjobs/templates/cronjob.yaml
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: "cronjob-hello-world"
+  labels:
+    chart: "helm-cronjobs-0.1.0"
+spec:
+  concurrencyPolicy: Allow
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: cronjob
+            cron: hello-world
+        spec:
+          containers:
+            - image: "hello-world:latest"
+              imagePullPolicy: IfNotPresent
+              name: hello-world
+          restartPolicy: OnFailure
+  schedule: "* * * * *"
+  successfulJobsHistoryLimit: 3
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: "cronjob-hello-ubuntu"
+  labels:
+    chart: "helm-cronjobs-0.1.0"
+spec:
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: cronjob
+            cron: hello-ubuntu
+        spec:
+          containers:
+            - image: "ubuntu:latest"
+              imagePullPolicy: Always
+              name: hello-ubuntu
+              command: [/bin/bash]
+              args:
+                - -c
+                - echo $(date) - hello from ubuntu
+
+              resources:
+                limits:
+                  cpu: 50m
+                  memory: 256Mi
+                requests:
+                  cpu: 50m
+                  memory: 256Mi
+
+          restartPolicy: OnFailure
+  schedule: "*/5 * * * *"
+  successfulJobsHistoryLimit: 3
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: "cronjob-hello-env-var"
+  labels:
+    chart: "helm-cronjobs-0.1.0"
+spec:
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: cronjob
+            cron: hello-env-var
+        spec:
+          containers:
+            - image: "busybox:latest"
+              imagePullPolicy: Always
+              name: hello-env-var
+              env:
+                - name: ECHO_VAR
+                  value: busybox
+
+              command: [/bin/sh]
+              args:
+                - -c
+                - echo $(date) - hello from $ECHO_VAR
+
+              resources:
+                limits:
+                  cpu: 50m
+                  memory: 256Mi
+                requests:
+                  cpu: 50m
+                  memory: 256Mi
+
+          nodeSelector:
+            type: infra
+
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: kubernetes.io/e2e-az-name
+                        operator: In
+                        values:
+                          - e2e-az1
+                          - e2e-az2
+
+          tolerations:
+            - effect: NoSchedule
+              operator: Exists
+
+          restartPolicy: Never
+  schedule: "* * * * *"
+  successfulJobsHistoryLimit: 3

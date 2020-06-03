@@ -4,8 +4,8 @@
 
 {{- range $job := .Values.jobs }}
 ---
-apiVersion: argoproj.io/v1alpha1
-kind: CronWorkflow
+apiVersion: batch/v1beta1
+kind: CronJob
 metadata:
   name: "{{ $release_name }}-{{ $job.name }}"
   labels:
