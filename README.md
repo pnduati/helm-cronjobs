@@ -14,12 +14,13 @@ Argo CD Installation
 https://argoproj.github.io/argo-cd/getting_started/#1-install-argo-cd
 ```
 
+![Deployment](images/Argo_CD_-_Applications___cronjob-argo.png)
+
 ```
 Deployment using Argo CD
 helm template --name cronjob --namespace=crons ./helm-cronjobs --namespace=crons -f ./helm-cronjobs/values.yaml --output-dir cronjob
 argocd app create cronjob-argo --repo https://github.com/pnduati/helm-cronjobs.git --path cron --dest-server https://kubernetes.default.svc --dest-namespace crons
 argocd app sync cronjob-argo
-![Architecture](images/Argo_CD_-_Applications___cronjob-argo.png)
 ```
 
 ## Examples
