@@ -1,0 +1,12 @@
+name: helm-cronjobs
+description: A chart for cron jobs
+version: 0.1.0
+apiVersion: v1
+keywords:
+  - cron
+home: "https://github.com/pnduati"
+sources:
+  - "https://github.com/pnduati"
+maintainers:
+  - name: Peter Nduati
+    email: lnduatipeter@gmail.com
